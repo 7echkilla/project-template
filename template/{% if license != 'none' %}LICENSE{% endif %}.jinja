@@ -1,0 +1,8 @@
+{% if license == 'mit' -%}
+{% filter replace('[year]', copyright_year) | replace('[fullname]', author_name) -%}
+{% include 'licenses/mit.txt' %}
+{%- endfilter %}
+{%- else -%}
+{% include 'licenses/' ~ license ~ '.txt' %}
+{#- The license texts already end with a newline; `-%}` stops a second one. #}
+{%- endif -%}

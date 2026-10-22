@@ -1,0 +1,73 @@
+# Settings ---------------------------------------------------------------------
+_min_copier_version: "9.4"
+# Only template/ is rendered; repo-level files (tests, licenses, CI) stay out of projects.
+_subdirectory: template
+# Owned by the project after creation: `copier update` must never overwrite them.
+_skip_if_exists:
+  - README.md
+  - CLAUDE.md
+_tasks:
+  - command: "[ -d .git ] || git init -b main"
+    when: "{{ _copier_operation == 'copy' }}"
+  # Installs both hook types listed in default_install_hook_types (pre-commit + commit-msg).
+  - command: pre-commit install
+    when: "{{ _copier_operation == 'copy' }}"
+
+# Identity ---------------------------------------------------------------------
+project_name:
+  type: str
+  help: Human-readable project name
+  validator: "{% if not project_name.strip() %}Required{% endif %}"
+
+project_slug:
+  type: str
+  help: Repository / directory name
+  default: "{{ project_name.strip() | lower | regex_replace('[^a-z0-9]+', '-') | trim('-') }}"
+  validator: >-
+    {% if not (project_slug | regex_search('^[a-z][a-z0-9-]*$')) %}
+    Lowercase letters, digits and dashes; must start with a letter
+    {% endif %}
+
+description:
+  type: str
+  help: One-line description
+  default: ""
+
+author_name:
+  type: str
+  default: 7echkilla
+
+# Stored in the answers file so the year stays fixed across later `copier update` runs.
+copyright_year:
+  type: str
+  default: "{{ '%Y' | strftime }}"
+
+# Shape ------------------------------------------------------------------------
+profile:
+  type: str
+  help: "project: full standards and collaboration files. learning: hooks and light CI only"
+  choices:
+    project: project
+    learning: learning
+  default: project
+
+languages:
+  type: str
+  help: Languages used in this repo (space to select, enter to confirm)
+  multiselect: true
+  choices:
+    Python (uv): python
+    C (CMake): c
+  default: []
+
+# Deliberately no default: every repo gets a conscious licensing decision.
+license:
+  type: str
+  help: License
+  choices:
+    MIT: mit
+    Apache-2.0: apache-2.0
+    GPL-3.0: gpl-3.0
+    LGPL-3.0: lgpl-3.0
+    AGPL-3.0: agpl-3.0
+    None (all rights reserved): none

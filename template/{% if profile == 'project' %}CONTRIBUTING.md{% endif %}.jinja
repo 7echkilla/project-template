@@ -1,0 +1,36 @@
+# Contributing to {{ project_name }}
+
+## Workflow: GitHub Flow
+
+1. `main` is always releasable and protected: no direct pushes.
+2. Branch from the latest `main`: `git switch -c <type>/<short-description>` (e.g. `feat/csv-export`, `fix/null-pointer`).
+3. Commit small, logical steps. Rebase on `main` to stay current: `git fetch && git rebase origin/main`.
+4. Open a pull request. CI must pass.
+5. **Squash-merge.** The PR title becomes the single commit on `main`, so it must be a Conventional Commit.
+
+## Commit messages: Conventional Commits
+
+```
+<type>(<optional scope>): <imperative summary, ≤72 chars>
+
+<optional body: what and why, not how>
+
+<optional footer: BREAKING CHANGE: ..., Refs: #123>
+```
+
+| Type | Use for | Version bump |
+|---|---|---|
+| `feat` | New user-facing capability | minor |
+| `fix` | Bug fix | patch |
+| `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore` | Everything else | none |
+| `feat!` / `BREAKING CHANGE:` footer | Incompatible change | major |
+
+The `commit-msg` hook rejects messages that don't match.
+
+## Local setup
+
+```bash
+pre-commit install   # once per clone
+```
+
+All commits must be signed.

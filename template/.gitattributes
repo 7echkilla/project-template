@@ -1,0 +1,2 @@
+# Normalise line endings in the repo regardless of contributors' OS settings.
+* text=auto eol=lf

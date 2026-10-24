@@ -1,6 +1,8 @@
 # Hooks for the template repo itself. The hooks generated projects get live in
 # template/.pre-commit-config.yaml.jinja; keep the shared ones in step.
 default_install_hook_types: [pre-commit, commit-msg]
+# Hooks without their own `stages` would otherwise also run at commit-msg.
+default_stages: [pre-commit]
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks

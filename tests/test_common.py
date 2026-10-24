@@ -112,6 +112,18 @@ def test_commit_message_must_be_conventional(render):
     assert git_commit(project, "chore: initial commit").returncode == 0
 
 
+def test_file_hooks_run_once_per_commit(render):
+    # A hook without `stages` runs at every installed hook type. With commit-msg also
+    # installed, file checks would run a second time against the commit message unless
+    # default_stages limits them to pre-commit.
+    project = render()
+    run(["git", "add", "-A"], cwd=project)
+    result = git_commit(project, "chore: initial commit")
+    output = result.stdout + result.stderr  # git relays hook output on stderr
+    assert result.returncode == 0, output
+    assert output.count("detect private key") == 1, output
+
+
 def test_private_key_is_blocked(render):
     project = render()
     run(["git", "add", "-A"], cwd=project)

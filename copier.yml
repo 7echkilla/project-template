@@ -9,6 +9,9 @@ _skip_if_exists:
 _tasks:
   - command: "[ -d .git ] || git init -b main"
     when: "{{ _copier_operation == 'copy' }}"
+  # CI runs `uv sync --locked`, so a lockfile must exist from the first commit.
+  - command: uv lock
+    when: "{{ _copier_operation == 'copy' and 'python' in languages }}"
   # Installs both hook types listed in default_install_hook_types (pre-commit + commit-msg).
   - command: pre-commit install
     when: "{{ _copier_operation == 'copy' }}"
@@ -59,6 +62,25 @@ languages:
     Python (uv): python
     C (CMake): c
   default: []
+
+# Python -------------------------------------------------------------------------
+# Import names can't contain dashes, so `my-tool` is imported as `my_tool`.
+package_name:
+  type: str
+  help: Python import (package) name
+  default: "{{ project_slug | replace('-', '_') }}"
+  when: "{{ 'python' in languages }}"
+  validator: >-
+    {% if not (package_name | regex_search('^[a-z][a-z0-9_]*$')) %}
+    Lowercase letters, digits and underscores; must start with a letter
+    {% endif %}
+
+python_version:
+  type: str
+  help: Minimum supported Python version
+  choices: ["3.12", "3.13", "3.14"]
+  default: "3.12"
+  when: "{{ 'python' in languages }}"
 
 # Deliberately no default: every repo gets a conscious licensing decision.
 license:

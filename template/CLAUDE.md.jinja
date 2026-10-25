@@ -4,6 +4,12 @@ Generated from `gh:7echkilla/project-template` ({{ profile }} profile). Template
 
 ## Commands
 - `pre-commit run --all-files`: format, lint and check everything
+{%- if 'python' in languages %}
+- `uv sync`: create/update `.venv` from `uv.lock`
+- `uv run pytest`: run tests
+- `uv run pyright`: type-check (same engine as VS Code Pylance)
+- `uv add <pkg>` / `uv add --dev <pkg>`: add a dependency; never edit `uv.lock` by hand
+{%- endif %}
 
 ## Notes
 <!-- Project-specific context for Claude: architecture, gotchas, decisions. -->

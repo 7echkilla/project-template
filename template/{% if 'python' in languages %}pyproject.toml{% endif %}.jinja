@@ -1,0 +1,35 @@
+[project]
+name = "{{ project_slug }}"
+version = "0.1.0"
+description = "{{ description }}"
+readme = "README.md"
+requires-python = ">={{ python_version }}"
+{%- if license != 'none' %}
+license = "{{ {'mit': 'MIT', 'apache-2.0': 'Apache-2.0', 'gpl-3.0': 'GPL-3.0', 'lgpl-3.0': 'LGPL-3.0', 'agpl-3.0': 'AGPL-3.0'}[license] }}"
+license-files = ["LICENSE"{% if license == 'lgpl-3.0' %}, "COPYING"{% endif %}]
+{%- endif %}
+dependencies = []
+
+[build-system]
+requires = ["uv_build>=0.11.7,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9",
+    "pyright>=1.1.414",
+    "ruff>=0.17.2"
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pyright]
+include = ["src", "tests"]
+typeCheckingMode = "standard"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

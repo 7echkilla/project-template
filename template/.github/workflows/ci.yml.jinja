@@ -30,6 +30,17 @@ jobs:
 {%- endraw %}
       # Same hooks as local commits, so a machine without hooks installed can't bypass them.
       - run: uvx pre-commit run --all-files --show-diff-on-failure
+{%- if 'python' in languages %}
+
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+      # --locked fails if uv.lock is out of date with pyproject.toml instead of silently updating it.
+      - run: uv sync --locked
+      - run: uv run pytest
+{%- endif %}
 {%- if profile == 'project' %}
 
   # Squash-merge turns the PR title into the commit on main, so the title must be a

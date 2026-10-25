@@ -1,5 +1,6 @@
 """Helpers for rendering the template into throwaway projects."""
 
+import os
 import subprocess
 from collections.abc import Callable
 from pathlib import Path
@@ -17,8 +18,18 @@ BASE_ANSWERS = {
 }
 
 
+# `uv run pytest` exports the template repo's VIRTUAL_ENV; rendered projects must use their own.
+CHILD_ENV = {k: v for k, v in os.environ.items() if k != "VIRTUAL_ENV"}
+
+
 def run(cmd: list[str], cwd: Path, check: bool = True) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(cmd, cwd=cwd, check=check, capture_output=True, text=True)
+    return subprocess.run(cmd, cwd=cwd, check=check, capture_output=True, text=True, env=CHILD_ENV)
+
+
+def assert_ok(cmd: list[str], cwd: Path) -> None:
+    """Run a command and fail the test with its full output if it doesn't succeed."""
+    result = run(cmd, cwd, check=False)
+    assert result.returncode == 0, f"$ {' '.join(cmd)}\n{result.stdout}{result.stderr}"
 
 
 def git_commit(project: Path, message: str) -> subprocess.CompletedProcess[str]:

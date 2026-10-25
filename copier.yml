@@ -89,7 +89,16 @@ license:
   choices:
     MIT: mit
     Apache-2.0: apache-2.0
-    GPL-3.0: gpl-3.0
-    LGPL-3.0: lgpl-3.0
-    AGPL-3.0: agpl-3.0
+    GPL-3.0-or-later: gpl-3.0
+    LGPL-3.0-or-later: lgpl-3.0
+    AGPL-3.0-or-later: agpl-3.0
     None (all rights reserved): none
+
+# Computed, never asked or stored: one SPDX lookup for every file that names the license.
+# -or-later is the FSF's recommended form; the bare GPL-3.0 ids are deprecated in SPDX.
+license_spdx:
+  type: str
+  when: false
+  default: >-
+    {{ {'mit': 'MIT', 'apache-2.0': 'Apache-2.0', 'gpl-3.0': 'GPL-3.0-or-later',
+    'lgpl-3.0': 'LGPL-3.0-or-later', 'agpl-3.0': 'AGPL-3.0-or-later'}.get(license, '') }}

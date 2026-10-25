@@ -68,7 +68,15 @@ def test_pyproject_metadata(render):
     assert data["build-system"]["build-backend"] == "uv_build"
 
 
-@pytest.mark.parametrize(("license_key", "spdx"), [("mit", "MIT"), ("apache-2.0", "Apache-2.0")])
+@pytest.mark.parametrize(
+    ("license_key", "spdx"),
+    [
+        ("mit", "MIT"),
+        ("apache-2.0", "Apache-2.0"),
+        ("gpl-3.0", "GPL-3.0-or-later"),
+        ("agpl-3.0", "AGPL-3.0-or-later"),
+    ],
+)
 def test_pyproject_license_is_spdx(render, license_key, spdx):
     # PEP 639: `license` is an SPDX expression, plus the files that hold the text.
     meta = load_pyproject(render(license=license_key, **PYTHON))["project"]
@@ -136,5 +144,5 @@ def test_pyright_blocks_type_errors(render):
 def test_pyproject_lgpl_lists_both_license_files(render):
     # LGPL-3.0 is a set of additional permissions on top of GPL-3.0, so both texts ship.
     meta = load_pyproject(render(license="lgpl-3.0", **PYTHON))["project"]
-    assert meta["license"] == "LGPL-3.0"
+    assert meta["license"] == "LGPL-3.0-or-later"
     assert meta["license-files"] == ["LICENSE", "COPYING"]

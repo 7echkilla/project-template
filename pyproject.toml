@@ -8,6 +8,7 @@ requires-python = ">=3.12"
 dev = [
     "copier>=9.4",
     "pre-commit>=4",
+    "ninja>=1.13",  # CMake generator for C renders; keeps the tests free of system installs
     "pytest>=8",
     "pyyaml>=6",
 ]

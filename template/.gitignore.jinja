@@ -23,3 +23,8 @@ build/
 .coverage
 htmlcov/
 {%- endif %}
+{%- if 'c' in languages %}
+
+# C / CMake: every preset builds into build/<preset>
+build/
+{%- endif %}

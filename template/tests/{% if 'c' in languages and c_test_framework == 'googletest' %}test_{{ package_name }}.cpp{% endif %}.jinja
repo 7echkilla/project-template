@@ -1,0 +1,12 @@
+#include <gtest/gtest.h>
+
+// The header's extern "C" guard is what lets C++ link against the C library.
+#include "{{ package_name }}/{{ package_name }}.h"
+
+TEST(Add, ReturnsSum) {
+    EXPECT_EQ({{ package_name }}_add(2, 3), 5);
+}
+
+TEST(Add, HandlesNegatives) {
+    EXPECT_EQ({{ package_name }}_add(2, -3), -1);
+}

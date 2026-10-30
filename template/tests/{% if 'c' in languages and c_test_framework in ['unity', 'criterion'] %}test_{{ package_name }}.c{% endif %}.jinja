@@ -1,0 +1,37 @@
+{%- if c_test_framework == 'unity' -%}
+#include "unity.h"
+
+#include "{{ package_name }}/{{ package_name }}.h"
+
+// Unity calls these around every test; they must exist even when empty.
+void setUp(void) {}
+void tearDown(void) {}
+
+static void test_add_returns_sum(void) {
+    TEST_ASSERT_EQUAL_INT(5, {{ package_name }}_add(2, 3));
+}
+
+static void test_add_handles_negatives(void) {
+    TEST_ASSERT_EQUAL_INT(-1, {{ package_name }}_add(2, -3));
+}
+
+// Unity has no test discovery: every test is registered here by hand.
+int main(void) {
+    UNITY_BEGIN();
+    RUN_TEST(test_add_returns_sum);
+    RUN_TEST(test_add_handles_negatives);
+    return UNITY_END();
+}
+{%- else -%}
+#include <criterion/criterion.h>
+
+#include "{{ package_name }}/{{ package_name }}.h"
+
+Test({{ package_name }}, add_returns_sum) {
+    cr_assert_eq({{ package_name }}_add(2, 3), 5);
+}
+
+Test({{ package_name }}, add_handles_negatives) {
+    cr_assert_eq({{ package_name }}_add(2, -3), -1);
+}
+{%- endif %}

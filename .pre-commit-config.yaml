@@ -24,6 +24,7 @@ repos:
     rev: 0.38.2
     hooks:
       - id: check-github-workflows
+      - id: check-dependabot
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.17.2
     hooks:

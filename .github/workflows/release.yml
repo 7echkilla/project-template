@@ -1,0 +1,22 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  # Keeps a "chore: release x.y.z" PR open with the next version and changelog; merging it
+  # tags vX.Y.Z and publishes a GitHub Release, which `copier copy/update` then follow.
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v5
+        with:
+          # A PAT, not GITHUB_TOKEN: PRs opened with GITHUB_TOKEN don't trigger CI, so the
+          # release PR could never pass the required checks.
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json

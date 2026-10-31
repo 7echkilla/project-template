@@ -20,9 +20,9 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: astral-sh/setup-uv@v6
-      - uses: actions/cache@v4
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+      - uses: actions/cache@v6
         with:
           path: ~/.cache/pre-commit
 {%- raw %}
@@ -35,8 +35,8 @@ jobs:
   python:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: astral-sh/setup-uv@v6
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
       # --locked fails if uv.lock is out of date with pyproject.toml instead of silently updating it.
       - run: uv sync --locked
       - run: uv run pytest
@@ -46,7 +46,7 @@ jobs:
   c:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - run: sudo apt-get update && sudo apt-get install -y ninja-build clang-tidy
 {%- if c_test_framework == 'criterion' %} libcriterion-dev{% endif %}
       # Warnings are errors only in CI, so a newer local compiler can't block your build.
@@ -64,7 +64,7 @@ jobs:
     permissions:
       pull-requests: read
     steps:
-      - uses: amannn/action-semantic-pull-request@v5
+      - uses: amannn/action-semantic-pull-request@v6
         env:
 {%- raw %}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -63,18 +63,20 @@ languages:
     C (CMake): c
   default: []
 
-# Python -------------------------------------------------------------------------
-# Import names can't contain dashes, so `my-tool` is imported as `my_tool`.
+# Shared by the language layers ----------------------------------------------------
+# Identifiers can't contain dashes, so `my-tool` becomes `my_tool`: the Python import
+# name, and the C library, header directory and symbol prefix.
 package_name:
   type: str
-  help: Python import (package) name
+  help: Package name (Python import name / C library and header name)
   default: "{{ project_slug | replace('-', '_') }}"
-  when: "{{ 'python' in languages }}"
+  when: "{{ 'python' in languages or 'c' in languages }}"
   validator: >-
     {% if not (package_name | regex_search('^[a-z][a-z0-9_]*$')) %}
     Lowercase letters, digits and underscores; must start with a letter
     {% endif %}
 
+# Python -------------------------------------------------------------------------
 python_version:
   type: str
   help: Minimum supported Python version
@@ -93,6 +95,25 @@ license:
     LGPL-3.0-or-later: lgpl-3.0
     AGPL-3.0-or-later: agpl-3.0
     None (all rights reserved): none
+
+# C ------------------------------------------------------------------------------
+c_standard:
+  type: str
+  help: C standard
+  choices: ["11", "17", "23"]
+  default: "17"
+  when: "{{ 'c' in languages }}"
+
+# Deliberately no default, like license: the right framework depends on the target.
+c_test_framework:
+  type: str
+  help: C test framework
+  choices:
+    Unity (C, embedded-friendly; fetched by CMake): unity
+    GoogleTest (C++; fetched by CMake): googletest
+    Criterion (C; system package libcriterion-dev): criterion
+    None: none
+  when: "{{ 'c' in languages }}"
 
 # Computed, never asked or stored: one SPDX lookup for every file that names the license.
 # -or-later is the FSF's recommended form; the bare GPL-3.0 ids are deprecated in SPDX.

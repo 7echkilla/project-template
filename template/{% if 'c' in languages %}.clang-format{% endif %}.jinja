@@ -1,0 +1,9 @@
+# LLVM base adjusted to the C style guide: 4-space indents, 100 columns, braces on every
+# if/for/while body (1TBS) so an added line can't silently fall outside the block.
+BasedOnStyle: LLVM
+IndentWidth: 4
+ColumnLimit: 100
+InsertBraces: true
+# Bodies always on their own lines (only empty `{}` stays inline), so formatting doesn't
+# depend on how long the project's identifiers happen to be.
+AllowShortFunctionsOnASingleLine: Empty

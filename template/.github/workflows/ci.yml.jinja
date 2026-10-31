@@ -41,6 +41,19 @@ jobs:
       - run: uv sync --locked
       - run: uv run pytest
 {%- endif %}
+{%- if 'c' in languages %}
+
+  c:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: sudo apt-get update && sudo apt-get install -y ninja-build clang-tidy
+{%- if c_test_framework == 'criterion' %} libcriterion-dev{% endif %}
+      # Warnings are errors only in CI, so a newer local compiler can't block your build.
+      - run: cmake --workflow --preset ci
+      - run: cmake --workflow --preset asan
+      - run: cmake --workflow --preset lint
+{%- endif %}
 {%- if profile == 'project' %}
 
   # Squash-merge turns the PR title into the commit on main, so the title must be a

@@ -1,0 +1,16 @@
+# Broad bug-finding checks; the disabled ones are noisy in C without catching real bugs.
+Checks: >
+  -*,
+  bugprone-*,
+  cert-*,
+  clang-analyzer-*,
+  misc-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  -bugprone-easily-swappable-parameters,
+  -misc-include-cleaner,
+  -readability-identifier-length,
+  -readability-magic-numbers
+# Report findings in the project's own headers, not in system or fetched dependency headers.
+HeaderFilterRegex: '/(include|src)/'

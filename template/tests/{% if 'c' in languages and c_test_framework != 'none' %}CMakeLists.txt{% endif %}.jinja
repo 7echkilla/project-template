@@ -1,0 +1,48 @@
+# Only the project's own code is held to clang-tidy and -Werror; the test framework is
+# third-party and the test files are mostly framework macros.
+set(CMAKE_C_CLANG_TIDY "")
+set(CMAKE_COMPILE_WARNING_AS_ERROR OFF)
+{%- if c_test_framework in ['unity', 'googletest'] %}
+
+# Tarball + hash instead of a git clone: faster, and the download is verified.
+include(FetchContent)
+{%- endif %}
+{%- if c_test_framework == 'unity' %}
+FetchContent_Declare(
+    unity
+    URL https://github.com/ThrowTheSwitch/Unity/archive/refs/tags/v2.7.0.tar.gz
+    URL_HASH SHA256=e84eb301ca7967831e68b1728f911e87fa2d345d8ddb64f897bc2f2ee24a321c
+)
+FetchContent_MakeAvailable(unity)
+
+add_executable(test_{{ package_name }} test_{{ package_name }}.c)
+target_link_libraries(test_{{ package_name }} PRIVATE {{ package_name }} unity::framework)
+add_test(NAME test_{{ package_name }} COMMAND test_{{ package_name }})
+{%- elif c_test_framework == 'googletest' %}
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/refs/tags/v1.18.0.tar.gz
+    URL_HASH SHA256=6e3191c1455468b3fc35a417fb565c1c5071aee1b7e7f85e30cf48a98d37d8b5
+)
+set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+# GoogleTest is C++: only the tests need a C++ compiler, the project itself stays C.
+enable_language(CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_executable(test_{{ package_name }} test_{{ package_name }}.cpp)
+target_link_libraries(test_{{ package_name }} PRIVATE {{ package_name }} GTest::gtest_main)
+include(GoogleTest)
+gtest_discover_tests(test_{{ package_name }})
+{%- elif c_test_framework == 'criterion' %}
+
+# Criterion has no CMake package; it ships a pkg-config file (apt: libcriterion-dev).
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(CRITERION REQUIRED IMPORTED_TARGET criterion)
+
+add_executable(test_{{ package_name }} test_{{ package_name }}.c)
+target_link_libraries(test_{{ package_name }} PRIVATE {{ package_name }} PkgConfig::CRITERION)
+add_test(NAME test_{{ package_name }} COMMAND test_{{ package_name }})
+{%- endif %}

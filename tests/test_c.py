@@ -1,6 +1,7 @@
 """The C layer: rendered only when selected, builds and tests, and enforces its standards."""
 
 import json
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -18,10 +19,15 @@ def has_criterion() -> bool:
     return subprocess.run(["pkg-config", "--exists", "criterion"]).returncode == 0
 
 
-# Criterion is a system package; template CI installs it, local machines may not have it.
+# Criterion and clang-tidy are system packages that local machines may lack. Template CI
+# installs both, so there (CI is set) a missing tool must fail loudly, never skip silently.
+IN_CI = bool(os.environ.get("CI"))
+
 CRITERION = pytest.param(
     "criterion",
-    marks=pytest.mark.skipif(not has_criterion(), reason="libcriterion-dev not installed"),
+    marks=pytest.mark.skipif(
+        not has_criterion() and not IN_CI, reason="libcriterion-dev not installed"
+    ),
 )
 
 
@@ -155,7 +161,9 @@ def test_asan_preset(render):
     workflow(render(**C), "asan")
 
 
-@pytest.mark.skipif(shutil.which("clang-tidy") is None, reason="clang-tidy not installed")
+@pytest.mark.skipif(
+    shutil.which("clang-tidy") is None and not IN_CI, reason="clang-tidy not installed"
+)
 def test_lint_preset(render):
     workflow(render(**C), "lint")
 

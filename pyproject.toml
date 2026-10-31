@@ -1,6 +1,6 @@
 [project]
 name = "project-template"
-version = "0.0.0"
+version = "0.0.0" # unused: template versions are git tags cut by release-please
 description = "Copier template: dev tooling and tests for the template itself"
 requires-python = ">=3.12"
 

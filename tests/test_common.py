@@ -10,6 +10,9 @@ PROFILES = ["project", "learning"]
 PROJECT_ONLY = [
     "CONTRIBUTING.md",
     ".github/pull_request_template.md",
+    ".github/ISSUE_TEMPLATE/bug_report.yml",
+    ".github/ISSUE_TEMPLATE/feature_request.yml",
+    ".github/ISSUE_TEMPLATE/config.yml",
     ".github/dependabot.yml",
 ]
 
@@ -151,3 +154,13 @@ def test_whitespace_is_fixed(render):
     # ...and the re-staged commit then goes through.
     run(["git", "add", "notes.txt"], cwd=project)
     assert git_commit(project, "docs: add notes").returncode == 0
+
+
+def test_issue_forms_are_valid(render):
+    # GitHub only validates forms after push; catch a broken one here instead.
+    forms = render(profile="project") / ".github/ISSUE_TEMPLATE"
+    for name in ["bug_report.yml", "feature_request.yml"]:
+        form = yaml.safe_load((forms / name).read_text())
+        assert {"name", "description", "body"} <= form.keys(), name
+        ids = [field["id"] for field in form["body"]]
+        assert len(ids) == len(set(ids)), f"duplicate field ids in {name}"

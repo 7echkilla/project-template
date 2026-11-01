@@ -10,6 +10,17 @@ updates:
     groups:
       actions:
         patterns: ["*"]
+
+  # Keeps hook revs in .pre-commit-config.yaml current (ruff, clang-format, …).
+  - package-ecosystem: pre-commit
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: chore
+    groups:
+      hooks:
+        patterns: ["*"]
 {%- if 'python' in languages %}
 
   - package-ecosystem: uv

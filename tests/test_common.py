@@ -151,3 +151,10 @@ def test_whitespace_is_fixed(render):
     # ...and the re-staged commit then goes through.
     run(["git", "add", "notes.txt"], cwd=project)
     assert git_commit(project, "docs: add notes").returncode == 0
+
+
+def test_dependabot_tracks_actions_and_hooks(render):
+    project = render(profile="project")
+    config = yaml.safe_load((project / ".github/dependabot.yml").read_text())
+    ecosystems = [u["package-ecosystem"] for u in config["updates"]]
+    assert {"github-actions", "pre-commit"} <= set(ecosystems)

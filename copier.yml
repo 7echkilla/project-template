@@ -9,9 +9,10 @@ _skip_if_exists:
 _tasks:
   - command: "[ -d .git ] || git init -b main"
     when: "{{ _copier_operation == 'copy' }}"
-  # CI runs `uv sync --locked`, so a lockfile must exist from the first commit.
+  # CI runs `uv sync --locked`, so the lockfile must match pyproject.toml from the first
+  # commit, and again after every update that changes it (no-op when nothing changed).
   - command: uv lock
-    when: "{{ _copier_operation == 'copy' and 'python' in languages }}"
+    when: "{{ 'python' in languages }}"
   # Installs both hook types listed in default_install_hook_types (pre-commit + commit-msg).
   - command: pre-commit install
     when: "{{ _copier_operation == 'copy' }}"

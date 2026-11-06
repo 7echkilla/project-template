@@ -164,3 +164,10 @@ def test_issue_forms_are_valid(render):
         assert {"name", "description", "body"} <= form.keys(), name
         ids = [field["id"] for field in form["body"]]
         assert len(ids) == len(set(ids)), f"duplicate field ids in {name}"
+        
+        
+def test_dependabot_tracks_actions_and_hooks(render):
+    project = render(profile="project")
+    config = yaml.safe_load((project / ".github/dependabot.yml").read_text())
+    ecosystems = [u["package-ecosystem"] for u in config["updates"]]
+    assert {"github-actions", "pre-commit"} <= set(ecosystems)

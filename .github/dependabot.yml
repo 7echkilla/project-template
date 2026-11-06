@@ -19,3 +19,13 @@ updates:
     groups:
       python:
         patterns: ["*"]
+
+  - package-ecosystem: pre-commit
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: chore
+    groups:
+      hooks:
+        patterns: ["*"]

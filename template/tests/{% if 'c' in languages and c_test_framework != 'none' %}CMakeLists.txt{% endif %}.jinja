@@ -5,6 +5,8 @@ set(CMAKE_COMPILE_WARNING_AS_ERROR OFF)
 {%- if c_test_framework in ['unity', 'googletest'] %}
 
 # Tarball + hash instead of a git clone: faster, and the download is verified.
+# Dependabot can't see these: to upgrade, change the tag in URL, then replace URL_HASH with
+# the output of `curl -sL <url> | sha256sum`.
 include(FetchContent)
 {%- endif %}
 {%- if c_test_framework == 'unity' %}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "simple",
+  "bump-minor-pre-major": true,
+  "initial-version": "0.1.0",
+  "packages": {
+    ".": {
+      "extra-files": [
+{%- if 'python' in languages %}
+        {"type": "toml", "path": "pyproject.toml", "jsonpath": "$.project.version"},
+        {"type": "toml", "path": "uv.lock", "jsonpath": "$.package[?(@.name.value=='{{ project_slug }}')].version"}{% if 'c' in languages %},{% endif %}
+{%- endif %}
+{%- if 'c' in languages %}
+        "CMakeLists.txt"
+{%- endif %}
+      ]
+    }
+  }
+}

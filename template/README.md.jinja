@@ -15,6 +15,19 @@ pre-commit install   # once per clone: enables format, lint and commit-message h
 ```
 
 Commits follow [Conventional Commits](https://www.conventionalcommits.org/).
+{%- if release %}
+
+## Releases
+
+[release-please](https://github.com/googleapis/release-please) keeps a release PR open with the
+next version and changelog. Merging it tags `vX.Y.Z` and publishes a GitHub Release.
+
+One-time setup, or the Release workflow fails at its token step:
+
+1. Install the release GitHub App on this repository.
+2. Settings → Secrets and variables → Actions: add the variable `RELEASE_APP_CLIENT_ID` and the
+   secret `RELEASE_APP_PRIVATE_KEY`.
+{%- endif %}
 {%- if license != 'none' %}
 
 ## License

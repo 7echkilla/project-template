@@ -26,6 +26,14 @@
 | `feat!` / `BREAKING CHANGE:` footer | Incompatible change | major |
 
 The `commit-msg` hook rejects messages that don't match.
+{%- if release %}
+
+## Releases
+
+Don't edit version numbers or `CHANGELOG.md` by hand. release-please derives the next version
+from the squash commits above and updates every file that repeats it
+(`release-please-config.json` lists them). Merge the release PR when you want to ship.
+{%- endif %}
 
 ## Local setup
 

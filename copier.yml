@@ -64,6 +64,13 @@ languages:
     C (CMake): c
   default: []
 
+# Off by default: it needs the release App installed and two repo settings (see README).
+release:
+  type: bool
+  help: Cut SemVer releases with release-please (tags, CHANGELOG, GitHub Releases)?
+  default: false
+  when: "{{ profile == 'project' }}"
+
 # Shared by the language layers ----------------------------------------------------
 # Identifiers can't contain dashes, so `my-tool` becomes `my_tool`: the Python import
 # name, and the C library, header directory and symbol prefix.

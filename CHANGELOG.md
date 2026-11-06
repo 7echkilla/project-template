@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.2.0](https://github.com/7echkilla/project-template/compare/v0.1.0...v0.2.0) (2026-11-06)
+
+
+### Features
+
+* add an optional release-please setup for generated projects ([#20](https://github.com/7echkilla/project-template/issues/20)) ([372b341](https://github.com/7echkilla/project-template/commit/372b3419e640ac09cf03d51545054a0bedc38dc9))
+* add issue forms to the project profile ([#16](https://github.com/7echkilla/project-template/issues/16)) ([7303c26](https://github.com/7echkilla/project-template/commit/7303c2682ad0bc6a4068ed19638b5c8b1f1e1317))
+* keep pre-commit hook versions current ([#17](https://github.com/7echkilla/project-template/issues/17)) ([f6e4178](https://github.com/7echkilla/project-template/commit/f6e41780a1baf9d0d4f7b4467a155eb3448cec45))
+
+
+### Bug Fixes
+
+* keep uv.lock in sync after copier update ([#14](https://github.com/7echkilla/project-template/issues/14)) ([868d146](https://github.com/7echkilla/project-template/commit/868d1460ffb3b11a583effc4573643cbdc18f960))
+* sync generated hook versions with the template repo ([#19](https://github.com/7echkilla/project-template/issues/19)) ([6cb590a](https://github.com/7echkilla/project-template/commit/6cb590a5689297af053e2cf1dd9e9ba992508836))
+
 ## 0.1.0 (2026-11-01)
 
 

@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # re-run by hand, e.g. after rotating the app key
+
+permissions:
+  contents: read
+
+jobs:
+  # Keeps a release PR open with the next version and changelog; merging it tags vX.Y.Z
+  # and publishes a GitHub Release.
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      # A GitHub App token, not GITHUB_TOKEN or a PAT: PRs opened with GITHUB_TOKEN don't
+      # trigger the required checks, and commits made through the API with a PAT are
+      # unsigned. GitHub signs an App's commits and runs CI on its PRs.
+      - uses: actions/create-github-app-token@v3
+        id: app-token
+        with:
+          client-id: ${{ vars.RELEASE_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+      - uses: googleapis/release-please-action@v5
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json

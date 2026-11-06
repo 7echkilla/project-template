@@ -1,10 +1,11 @@
 """Files and behaviour every rendered project must have, whatever its languages."""
 
 from datetime import date
+from pathlib import Path
 
 import pytest
 import yaml
-from conftest import git_commit, run
+from conftest import TEMPLATE_ROOT, git_commit, run
 
 PROFILES = ["project", "learning"]
 PROJECT_ONLY = [
@@ -171,3 +172,22 @@ def test_dependabot_tracks_actions_and_hooks(render):
     config = yaml.safe_load((project / ".github/dependabot.yml").read_text())
     ecosystems = [u["package-ecosystem"] for u in config["updates"]]
     assert {"github-actions", "pre-commit"} <= set(ecosystems)
+
+
+def hook_revs(config: Path) -> dict[str, str]:
+    repos = yaml.safe_load(config.read_text())["repos"]
+    return {r["repo"]: r["rev"] for r in repos if r["repo"] != "local"}
+
+
+def test_generated_hooks_match_template_repo(render):
+    # Dependabot bumps only this repo's own config; it can't parse the .jinja one. Failing
+    # here turns each hooks PR into a reminder to copy the bump into the template.
+    ours = hook_revs(TEMPLATE_ROOT / ".pre-commit-config.yaml")
+    project = render(languages=["python", "c"], c_test_framework="unity")
+    generated = hook_revs(project / ".pre-commit-config.yaml")
+    stale = {
+        repo: (rev, ours[repo])
+        for repo, rev in generated.items()
+        if repo in ours and rev != ours[repo]
+    }
+    assert not stale, f"generated (rev, template repo's rev): {stale}"

@@ -13,19 +13,19 @@ repos:
       - id: check-toml
       - id: check-yaml
   - repo: https://github.com/compilerla/conventional-pre-commit
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.38.2
+    rev: 0.39.0
     hooks:
       - id: check-github-workflows
       - id: check-dependabot
 
 {%- if 'python' in languages %}
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.17.2
+    rev: v0.17.3
     hooks:
       - id: ruff-check
         args: [--fix]
@@ -42,7 +42,7 @@ repos:
 
 {%- if 'c' in languages %}
   - repo: https://github.com/pre-commit/mirrors-clang-format
-    rev: v23.1.3
+    rev: v23.1.3  # not in the template repo's own hooks, so no sync test: bump by hand
     hooks:
       - id: clang-format
         types_or: [c, c++]

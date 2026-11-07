@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/7echkilla/project-template/compare/v0.2.0...v0.2.1) (2026-11-07)
+
+
+### Bug Fixes
+
+* allow current uv_build versions ([#21](https://github.com/7echkilla/project-template/issues/21)) ([8061e65](https://github.com/7echkilla/project-template/commit/8061e6506b3cb165a997dc74c35f25da77a6ee3a))
+
 ## [0.2.0](https://github.com/7echkilla/project-template/compare/v0.1.0...v0.2.0) (2026-11-06)
 
 
